@@ -1,0 +1,187 @@
+$(window).load(function() {
+
+//Flex it
+    $('.class-name').flexslider({
+    animation: "slide",
+    controlNav: false, 
+    animationLoop: false,
+    slideshowSpeed: 3000,
+    animationSpeed: 500,
+    //selector: ".instagram-pics > li", //For Instagram - equivalent name for ul.slides
+    prevText: "",
+    nextText: "",	
+    start: function(slider) {
+    	$('.client-slider .loader').css("display","none");
+	},
+    after: function(slider) {
+    	/* auto-restart player if paused after action */
+    	if (!slider.playing) {
+      		slider.play();
+    	}
+  	}    
+  });
+
+//Scroll to
+    var newHeight = $("html").height();
+    $(".button-class").click(function(event){
+        $('html, body').animate({scrollTop: newHeight}, {duration: 1000, easing: 'easeOutQuint'});
+    });
+
+//Menu btn
+    $('.menu-btn').on('click',function(){
+        $('.menu-btn button, nav').toggleClass('is-active');
+    })
+
+//Overlay
+    $('.overlay-trigger').on('click',function(){
+        $('.overlay').html('<div class="close-btn"><i class="material-icons">close</i></div><div class="iframe-wrapper"><div class="iframe--responsive">Iframe here</div></div>');
+    })
+
+//YouTube API <div id="player"></div> Move below to header.php
+    var tag = document.createElement('script');
+    tag.src = "//www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+
+    onYouTubeIframeAPIReady = function () {
+        player = new YT.Player('player', {
+            height: '244',
+            width: '434',
+            videoId: 'Ncff9XreRRk',  // youtube video id
+            playerVars: {
+                'autoplay': 0,
+                'controls':0,
+                'showinfo':0,
+                'modestbranding':0,
+                'rel': 0,
+                'showinfo': 0
+            },
+            events: {
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+    onPlayerStateChange = function (event) {
+        if (event.data == YT.PlayerState.ENDED) {
+            player.playVideo();
+        }
+    }
+    
+//Iframe wrapper
+    $('iframe').wrap('<div class="iframe-wrapper"><div class="iframe--responsive" /></div>');    
+    })
+
+// Parallax
+	$(window).bind('scroll',function(e){
+   		parallaxScroll();
+   	});
+   	function parallaxScroll(){
+   		var scrolledY = $(window).scrollTop();
+		$('').css('background-position','center -'+((scrolledY*0.3))+'px');   	
+    }
+
+//Full browser height
+$(document).ready(sizeContent);
+function sizeContent() {
+    var newHeight = $("html").height();
+    $(".large-window").css("height", newHeight);
+    $(".bio-window").css("height", newHeight);
+}
+
+$(window).resize(function () { 
+    var newHeight = $("html").height();
+    $(".large-window").css("height", newHeight);
+    $(".bio-window").css("height", newHeight);
+});	
+
+//Parallax Content
+$.fn.moveIt = function(){
+    var $window = $(window);
+    var instances = [];
+    
+    $(this).each(function(){
+        instances.push(new moveItItem($(this)));
+    });
+    
+    window.onscroll = function(){
+        var scrollTop = $window.scrollTop();
+        instances.forEach(function(inst){
+            inst.update(scrollTop);
+        });
+    }
+}
+class moveItItem {
+    constructor(el) {
+        this.el = $(el);
+        this.speed = parseInt(this.el.attr('data-scroll-speed'));
+    }
+    update(scrollTop) {
+        this.el.css('transform', 'translateY(' + -(scrollTop / this.speed) + 'px)');
+    }
+}
+
+//Page switch delay
+$(document).ready(function(){
+    $("").click(function(e) {
+	    e.preventDefault();
+	    setTimeout(function(){
+		    $('main, aside').animate({
+			    top: '30px',
+			    opacity: '0'
+		    })
+		}, 0);
+    var href = $(this).attr('href');
+//     	setTime(function(){$('main, aside').removeClass('active')},1000);
+    	setTimeout(function(){$('main, aside').addClass('page-out')},1000);
+		setTimeout(function() {window.location = href}, 1200);
+		return false;
+	});                            
+});
+
+
+/* Add to Footer after body tag
+<script>
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload(); 
+    }
+};
+</script>		
+*/
+
+// Waypoints
+$(document).ready(function(){
+  $('').waypoint(function(direction) {
+    if (direction === 'down') {
+      // Do stuff
+    }
+  }, {
+    offset: '25%'
+  }).waypoint(function(direction) {
+    if (direction === 'up') {
+      // Do stuff
+    }
+  }, {
+    offset: '75%'
+  });
+});
+
+//Scroll To HREF
+$(document).ready(function() {
+    $('header a').on('click',function(){
+        $('header a').removeClass('active');
+        $(this).addClass('active');
+        $('html, body').animate({
+            scrollTop: $( $.attr(this, 'href') ).offset().top
+        }, 500);
+        return false;
+    }); 
+    $('.scroll-trigger').on('click',function(){
+        $('html, body').animate({
+            scrollTop: $( $.attr(this, 'href') ).offset().top
+        }, 500);
+        return false;
+    }); 
+});
